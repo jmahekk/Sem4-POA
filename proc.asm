@@ -1,0 +1,46 @@
+DATA SEGMENT
+    STRING1 DB 88H,11H,22H,44H,11H
+DATA ENDS
+
+CODE SEGMENT
+    ASSUME CS:CODE,DS:DATA
+    START:
+    MOV AX,DATA
+    MOV DS,AX
+
+CALL ASCENDING
+
+MOV AH,4CH
+INT 21H
+
+PROC ASCENDING NEAR
+    MOV CH,04H
+    
+    UP2:
+    MOV CL,04H
+    LEA SI,STRING1
+    
+    UP1:
+    MOV AL,[SI]
+    MOV BL,[SI+1]
+    CMP AL,BL
+    JC DOWN
+    MOV DL,[SI+1]
+    XCHG [SI],DL
+    MOV [SI+1],DL
+    
+    DOWN:
+    INC SI
+    DEC CL
+    JNZ UP1
+    DEC CH
+    JNZ UP2
+    
+    RET
+    
+ASCENDING ENDP
+CODE ENDS
+END START
+    
+
+
